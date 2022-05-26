@@ -1,0 +1,464 @@
+//ps1
+
+#include <xc.h>
+
+
+
+void main(void) {
+    int array1[10]={1,1,1,1,1,1,1,1,1,1};
+    int array2[100];
+    
+    int total=0;
+    for(int i=0;i<10;i++)
+    {
+        total=total+array1[i];
+    }
+    
+    int sum=0;
+    for(int i=0;i<100;i++)
+    {
+        array2[i]=1;
+        sum=sum+array2[i];
+    }
+    int sum1=sum;
+    int *p=&sum1;
+    return;
+}
+
+//ps2
+
+#include <xc.h>
+
+void main(void) {
+    int arr[100];
+    int arr2[100];
+    int arr1[100];
+    
+    for(int i=0;i<100 ;i++)
+    {
+        arr[i]=i+1;
+        arr1[i]=arr[i];
+    }
+    
+    for (int i = 0; i < 100; i++) {
+        for (int j = 0; j < 100 - 1 - i; j++) {
+            if (arr[j] > arr[j + 1]) {
+               int temp = arr[j + 1];
+               arr[j + 1] = arr[j];
+               arr[j] = temp;
+            }
+        }
+    }
+    while(1)
+    {
+        for(int i=0;i<100;i++)
+        {
+            arr2[i]=arr[i];
+        }
+    }
+    
+    return;
+}
+
+
+//ps3 
+
+
+#include <xc.h>
+
+void main(void) {
+    int arr[10]={10,9,8,7,6,5,4,3,2,1};
+    int arr1[10];
+    int arr2[10];
+    
+    for(int i=0;i<10;i++)
+    {
+        arr1[i]=arr[i];
+    }
+    
+    int i, j, min_idx;
+    for (i = 0; i < 10 - 1; i++) 
+    {
+        min_idx = i;
+        for (j = i + 1; j < 10; j++)
+        {
+            if (arr[j] < arr[min_idx])
+            {
+               min_idx = j;
+               int temp = arr[min_idx];
+               arr[min_idx] = arr[i];
+               arr[i] = temp;
+            }
+        }
+    }
+    while (1)
+    {
+        for (int i = 0; i < 10; i++) 
+        {
+            arr2[i] = arr[9-i];
+        }
+    }
+    return;
+}
+
+///ps4
+
+#include <xc.h>
+
+//int a;
+
+void main(void) {
+ int a;
+ int b;
+ 
+ TRISB = 0;
+ TRISC = 0;
+ TRISD = 0;
+ 
+ T0CON = 0x8C; //140
+ PORTB = 0x82; //130
+ 
+ while(a==0){
+ b = (T0CON * PORTB); //0x4718, 18200d
+ PORTC = b/256;//47
+ PORTD = b%256;//18
+ 
+ }
+
+ while(a==1){
+ PORTC = T0CON / PORTB; //0x1
+ PORTD = T0CON % PORTB; //0xA
+ 
+ }
+ 
+ 
+ return;
+}
+ 
+ //ps5
+
+ #include <xc.h>
+
+void main(void) {
+    int x=25;
+    int y=10;
+    PORTD;
+    while(1)
+    {
+        PORTD=x-y;
+        STATUS;
+    }
+    return;
+}
+
+//ps6
+
+#include <xc.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+
+void main(void)
+{
+    TRISB = 0;
+    PORTB =0;
+    T0CON = 0x8;
+    TMR0IF = 0;
+    while(1)
+    {
+        GIE = 1;
+        TMR0IE = 1;
+        for(int  i=0; i<1000; i++)
+        {
+            TMR0 = 53536;
+            TMR0ON = 1;
+            while(!TMR0IF);
+            TMR0IF = 0;
+            TMR0ON = 0;
+        }
+        PORTB = PORTB<<1;
+        PORTB++;
+        if(PORTB==0xFF)  PORTB=0;
+    }
+    return ;
+}
+
+//ps7
+
+#include<pic18f4550.h>
+
+int c=0;
+void __interrupt() Timer1__ISR(void){
+    
+    if(TMR1IF){
+        TMR1=53536;
+        c++;
+        if(c==1000){
+            LATAbits.LATA5=~LATAbits.LATA5;
+            c=0;
+        }
+        TMR1IF=0;
+    }
+}
+
+void main(void){
+    
+    TMR1=53536;
+    T1CON=0x80;
+    TMR1IF=0;
+    LATAbits.LATA5=0;
+    TRISAbits.TRISA5=0;
+    GIE=1;
+    PEIE=1;
+    TMR1IE=1;
+    TMR1ON=1;
+    while(1);
+    return;
+}
+
+//ps8
+
+#include <xc.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+
+void main(void)
+{
+    TRISB = 0;
+    PORTB =0;
+    T1CON = 0x80;
+    TMR1IF = 0;
+    while(1)
+    {
+        GIE = 1;
+        TMR1IE = 1;
+        for(int  i=0; i<1000; i++)
+        {
+            TMR1 = 53536;
+            TMR1ON = 1;
+            while(!TMR1IF);
+            TMR1IF = 0;
+            TMR1ON = 0;
+        }
+        PORTB = PORTB<<1;
+        PORTB++;
+        if(PORTB==0xFF)  PORTB=0;
+    }
+    return ;
+}
+
+//ps9
+
+BUZZER USING TIMER0:
+
+#include<pic18f4550.h>
+
+int c=0;
+void __interrupt() Timer0__ISR(void){
+    
+    if(TMR0IF){
+        TMR0=53536;
+        c++;
+        if(c==1000){
+            LATAbits.LATA5=~LATAbits.LATA5;
+            c=0;
+        }
+        TMR0IF=0;
+    }
+}
+
+void main(void){
+    
+    TMR0=53536;
+    T0CON=0x80;
+    TMR0IF=0;
+    LATAbits.LATA5=0;
+    TRISAbits.TRISA5=0;
+    GIE=1;
+    PEIE=1;
+    TMR0IE=1;
+    TMR0ON=1;
+    while(1);
+    return;
+}
+
+//ps10
+
+#include <xc.h>
+
+void main(void) {
+    TRISCbits.TRISC2 = 0;
+    CCP1CON = 0b00001100;
+    T2CON = 0b00000010;
+    PR2 = 61;
+    CCPR1L = 30;
+    while(1){
+        TMR2IF = 0;
+        TMR2 = 0;
+        TMR2ON = 1;
+        while(TMR2IF==0);
+    }
+    return;
+}
+
+//ps11
+
+/*
+Calculations
+Fosc = 48MHz
+PWM Period = [(PR2) + 1] * 4 * TMR2 Prescale Value / Fosc
+PWM Period = 200us
+TMR2 Prescale = 16
+Hence, PR2 = 149 or 0x95
+Duty Cycle = 10% of 200us
+Duty Cycle = 20us
+Duty Cycle = (CCPR1L:CCP1CON<5:4>) * TMR2 Prescale Value / Fosc
+CCP1CON<5:4> = <1:1>
+Hence, CCPR1L = 15 or 0x0F
+*/
+
+#include<xc.h>
+
+void main(void) {
+    unsigned int i;
+    // CCP1 pin as output
+    TRISCbits.TRISC2 = 0; 
+    // Select PWM mode; Duty cycle LSB CCP1CON<4:5> = <0:1>
+    CCP1CON = 0b00101100;
+    // Prescalar = 16; Timer2 OFF
+    T2CON = 0b00000010;
+    GIE = 1;
+    TRISAbits.TRISA4 = 0;
+    while(1) {
+        TMR2 = 0;
+        PR2 = 250;
+        // Duty cycle 1% 
+        CCPR1L = 2; 
+        
+        TMR2IF = 0;
+        // Timer2 ON
+        TMR2ON = 1; 
+        for(int i = 2; i < 255; i += 50) {
+            CCPR1L = i;
+            for(int j = 0; j < 1000; j++)
+                for(int k = 0; k < 10000; k++);
+                LATAbits.LATA4 = ~LATAbits.LATA4;
+        } 
+    }
+}
+
+//ps12
+
+#include <xc.h>
+#define relay LATAbits.LATA4
+#define _XTAL_FREQ 4000000
+int c = 0;
+void __interrupt() isr(){
+    if(INT1IF){
+        INT1IF = 0;
+        if(c==0 && relay==0){
+            relay = 1;
+        }
+        else if(relay==1 && c==0){
+            c++;
+        }
+        else if(relay==1 && c==1){
+            c = 0;
+            relay = 0;
+        }
+   
+    }
+    
+}
+
+void main(void) {
+    TRISAbits.TRISA4 = 0;
+    TRISBbits.RB1 = 1;
+    relay = 0;
+    INT1IE = 1;
+    INTEDG1 = 0;
+    GIE = 1;
+    INT1IF = 0;
+    while(1);
+    return;
+}
+
+//ps13
+
+#include <xc.h>
+#include<stdio.h>
+#include <pic18f4550.h>
+#define _XTAL_FREQ 4000000
+
+void putch(unsigned char c){
+    while(PIR1bits.TXIF ==0);
+    TXREG = c;
+}
+
+void init_uart(void){
+    TXSTA1bits.TXEN = 1;
+    RCSTA1bits.SPEN = 1;
+}
+
+void main (void){
+    init_uart();
+    int a = 0;
+    TRISC=0;
+    TXSTA=0x20;
+    RCSTA=0b10010000;
+    SPBRG=6;
+    TRISCbits.TRISC7=1;
+    while(1){
+        printf("\n PICT");
+        a = RCREG;
+        if(a>=1 && a<=9){
+            printf("\nEntered: %d", a);
+            break;
+        }
+    }
+    while(1);
+    return;
+}
+
+
+//ps14
+
+#include <xc.h>
+#include<stdio.h>
+#define _XTAL_FREQ 4000000
+
+void putch(unsigned char c){
+    while(PIR1bits.TXIF==0);
+    TXREG = c;
+}
+
+
+void main(void) {
+    int a = 0;
+    TRISB = 0;
+    TRISC = 0;
+    TXSTA = 0x20;
+    RCSTA = 0b10010000;
+    SPBRG = 6;
+    TXSTAbits.TXEN = 1;               // enable transmitter
+    RCSTAbits.SPEN = 1;
+    TRISCbits.TRISC7 = 1;
+    while(PIR1bits.RCIF==0);
+    a = RCREG;
+    printf("\nValue of Input k%d",a);
+    printf("\nValue 2k %d",a*2);
+    printf("\nValue 3k %d",a*3);
+    printf("\nValue 4k %d",a*4);
+    return;
+}
+
+//PS 15 
+// A 2 bit adder
+
+https://www.tinkercad.com/things/g6UpEUyJDh5-pa2bit-adder/editel?sharecode=eIjM5MnO5JJzhlWncFfQs1_cOA8PHdzyJJT-H4PIAb0
+
+
+//B Counter
+
+https://www.tinkercad.com/things/8ds3kmfnfsD-frantic-vihelmo-uusam/editel?sharecode=UVeZTvdSlQNAlbjMvXaOgdHpS6bWrQAmCujZd1qXBxk
